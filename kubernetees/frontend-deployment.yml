@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: frontend-deployment
+  namespace: movie-ticket
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: movie-frontend
+
+  template:
+    metadata:
+      labels:
+        app: movie-frontend
+
+    spec:
+      containers:
+      - name: movie-frontend
+
+        image: 703621194250.dkr.ecr.ap-south-1.amazonaws.com/movie-frontend:v3
+        imagePullPolicy: Always
+
+        ports:
+        - containerPort: 3000
+
+        env:
+        - name: REACT_APP_API_BASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: movie-config
+              key: REACT_APP_API_BASE_URL
+
+        - name: REACT_APP_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: movie-config
+              key: REACT_APP_NAME
+
+        - name: REACT_APP_ENVIRONMENT
+          valueFrom:
+            configMapKeyRef:
+              name: movie-config
+              key: REACT_APP_ENVIRONMENT
