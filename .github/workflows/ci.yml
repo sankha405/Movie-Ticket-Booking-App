@@ -95,3 +95,17 @@ jobs:
 
       - name: Build frontend Docker image
         run: docker build -t movie-frontend:${GITHUB_SHA::7} ./frontend
+     
+
+  oidc-debug:
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Show OIDC claims
+        uses: github/actions-oidc-debugger@main
+        with:
+          audience: sts.amazonaws.com
