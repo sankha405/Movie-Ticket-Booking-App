@@ -9,6 +9,10 @@ on:
     branches:
       - master
 
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   backend-ci:
     runs-on: ubuntu-latest
@@ -53,13 +57,22 @@ jobs:
       - name: Build frontend
         working-directory: ./frontend
         run: npm run build
-   
+
   backend-docker:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: arn:aws:iam::703621194250:role/GitHubActions-ECR-MovieTicket
+          aws-region: ap-south-1
+
+      - name: Verify AWS identity
+        run: aws sts get-caller-identity
 
       - name: Build backend Docker image
         run: docker build -t movie-backend:${GITHUB_SHA::7} ./backend
@@ -70,6 +83,15 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: arn:aws:iam::703621194250:role/GitHubActions-ECR-MovieTicket
+          aws-region: ap-south-1
+
+      - name: Verify AWS identity
+        run: aws sts get-caller-identity
 
       - name: Build frontend Docker image
         run: docker build -t movie-frontend:${GITHUB_SHA::7} ./frontend
