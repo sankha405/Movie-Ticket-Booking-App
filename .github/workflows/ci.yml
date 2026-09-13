@@ -74,6 +74,9 @@ jobs:
       - name: Verify AWS identity
         run: aws sts get-caller-identity
 
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
       - name: Build backend Docker image
         run: docker build -t movie-backend:${GITHUB_SHA::7} ./backend
 
@@ -92,6 +95,9 @@ jobs:
 
       - name: Verify AWS identity
         run: aws sts get-caller-identity
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
 
       - name: Build frontend Docker image
         run: docker build -t movie-frontend:${GITHUB_SHA::7} ./frontend
