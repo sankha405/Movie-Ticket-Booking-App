@@ -80,6 +80,17 @@ jobs:
       - name: Build backend Docker image
         run: docker build -t movie-backend:${GITHUB_SHA::7} ./backend
 
+      - name: Tag backend image for ECR
+        run: |
+          docker tag \
+            movie-backend:${GITHUB_SHA::7} \
+            703621194250.dkr.ecr.ap-south-1.amazonaws.com/movie-backend:${GITHUB_SHA::7}
+
+      - name: Push backend image to ECR
+        run: |
+          docker push \
+            703621194250.dkr.ecr.ap-south-1.amazonaws.com/movie-backend:${GITHUB_SHA::7}
+
   frontend-docker:
     runs-on: ubuntu-latest
 
@@ -101,6 +112,16 @@ jobs:
 
       - name: Build frontend Docker image
         run: docker build -t movie-frontend:${GITHUB_SHA::7} ./frontend
-     
+
+      - name: Tag frontend image for ECR
+        run: |
+          docker tag \
+            movie-frontend:${GITHUB_SHA::7} \
+            703621194250.dkr.ecr.ap-south-1.amazonaws.com/movie-frontend:${GITHUB_SHA::7}
+
+      - name: Push frontend image to ECR
+        run: |
+          docker push \
+            703621194250.dkr.ecr.ap-south-1.amazonaws.com/movie-frontend:${GITHUB_SHA::7}
 
   
